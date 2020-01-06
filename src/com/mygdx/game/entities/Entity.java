@@ -32,10 +32,6 @@ public abstract class Entity {
 		this.maxJumpSpeed = 250;
 	}
 	
-	public void startFrame() {
-		dir = 0;
-	}
-
 	public void update(float dt, GameMap map) {
 		// Apply gravity
 		if (!grounded) {
@@ -43,6 +39,8 @@ public abstract class Entity {
 		} 
 		
 		applyVelocity(dt, map);
+		
+		dir = 0;
 	}
 	
 	public void moveX(float dir, float dt) {
@@ -153,13 +151,9 @@ public abstract class Entity {
 	}
 	
 	public abstract void render(SpriteBatch batch);
-
-	
-	
 	
 	/* GETTERS AND SETTERS */
-	
-	
+		
 	public Vector2 getPos() {
 		return pos;
 	}

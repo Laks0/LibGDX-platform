@@ -19,8 +19,6 @@ public class Player extends Entity {
 	}
 
 	public void update(float dt, GameMap map) {
-		super.startFrame();
-		
 		// Jump
 		if (grounded && Gdx.input.isKeyPressed(Keys.SPACE)) {
 			jump();
