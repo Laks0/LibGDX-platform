@@ -59,17 +59,16 @@ public abstract class Entity {
 			vel.x = MathUtils.lerp(vel.x, 0, .1f);
 		}
 		
-		Vector2 newPos = new Vector2(pos.x + pos.x * dt, pos.y + vel.y * dt);
-		
-		pos.y += vel.y * dt;
-		pos.x += vel.x * dt;
-		
 		int yDir = (int) Math.signum(vel.y);
 		
 		// Horizontal collisions
 		if (dir != 0) {
-			while (isCollidingX(new Vector2(pos.x, pos.y - yDir * 5), (int) dir, map)) {
-				pos.x += -dir;
+			if (isCollidingX(new Vector2(pos.x + vel.x * dt, pos.y), (int) dir, map)) {
+				float newX = pos.x + vel.x * dt;
+				while(isCollidingX(new Vector2(newX, pos.y), (int) dir, map)) {
+					newX -= dir;
+				}
+				pos.x = newX;
 				vel.x = 0;
 			}
 		}
@@ -79,11 +78,18 @@ public abstract class Entity {
 			grounded = false;
 		}
 		
-		while (isCollidingY(pos, yDir, map)) {
-			pos.y += -yDir;
-			vel.y = 0;
+		if (isCollidingY(new Vector2(pos.x, pos.y + vel.y * dt), (int) yDir, map)) {
 			grounded = yDir == -1;
+			float newY = pos.y + vel.y * dt;
+			while (isCollidingY(new Vector2(pos.x, newY), yDir, map)) {
+				newY -= yDir;
+			}
+			pos.y = newY;
+			vel.y = 0;
 		}
+		
+		pos.x += vel.x * dt;
+		pos.y += vel.y * dt;
 	}
 	
 	protected boolean isCollidingY(Vector2 newPos, int dir, GameMap map) {
